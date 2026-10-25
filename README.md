@@ -1,55 +1,63 @@
 # FlowForge
 
-**A workflow automation platform for building, executing, and monitoring automated workflows.**
+A workflow automation platform for defining, executing, and monitoring structured workflows.
 
-FlowForge enables users to define workflows composed of triggers, conditions, and actions, then track their execution through a centralized interface with real-time status updates.
+## V1 goal
 
-## Core Features
+Build a secure, deployable workflow automation application that demonstrates practical backend engineering, relational data modeling, workflow execution, real-time updates, testing, and containerized deployment.
 
-- **Workflow Management** — Create, configure, and manage workflows.
-- **Conditional Logic** — Execute actions based on defined conditions.
-- **Workflow Execution** — Process workflow runs and track their outcomes.
-- **Execution History** — Persist execution status and step-level results.
-- **Real-Time Monitoring** — Observe workflow execution progress through WebSockets.
-- **Reliable Background Processing** — Planned asynchronous execution, retries, and job management.
+## V1 features
 
-## Technology Stack
+- User registration, login, refresh, and logout.
+- User-owned workflows; each user can own multiple workflows.
+- Workflow CRUD using structured forms, not a visual canvas.
+- Manual trigger.
+- Initial step types: log a message and evaluate a condition.
+- Conditions use field/operator/value comparisons with explicit true and false branches.
+- Execution starts asynchronously from the HTTP request and returns an execution ID.
+- Persisted execution status and step-by-step history.
+- Live progress via Socket.IO.
+- Cooperative cancellation at safe checkpoints.
+- Backend workflow validation and security controls.
+- Automated tests, OpenAPI documentation, Docker, and lightweight CI.
 
-- **Frontend:** React, TypeScript
-- **Backend:** Node.js, Express, TypeScript
-- **Database:** PostgreSQL
-- **Real-Time Communication:** WebSockets
-- **Background Jobs:** Redis, BullMQ
-- **Deployment:** Docker
-- **CI/CD:** Planned
+## V1 execution behavior
 
-_The stack and features will be implemented incrementally as the project develops._
+- PostgreSQL is the source of truth; WebSockets deliver updates, and clients refetch persisted state after reconnecting.
+- V1 uses a separate in-process runner; automatic recovery after a server crash is not guaranteed.
+- A failed step stops the workflow and records the failure where possible.
+- Cancellation may wait for a currently running step and does not undo completed side effects.
+- Multiple independent runs are allowed. An idempotency key prevents duplicate execution records for repeated submissions using the same key.
+- New runs use the latest saved definition. Full workflow version history is not included.
 
-## Project Structure
+## Stack
 
+- Frontend: React, TypeScript, React Router, TanStack Query, React Hook Form, Zod, Tailwind CSS, shadcn/ui.
+- Backend: Node.js, Express, TypeScript, Zod, Socket.IO, Pino.
+- Database: PostgreSQL, Drizzle ORM, Drizzle Kit migrations.
+- Tests: Vitest, Supertest, dedicated PostgreSQL test database.
+- API docs: OpenAPI and Swagger UI.
+- Delivery: Docker and GitHub Actions for lint, type checks, tests, and build checks.
+
+Redis + BullMQ are deferred from V1.
+
+## Repository layout
+
+```text
 FlowForge/
-├── frontend/ # React application
-├── backend/ # API and workflow execution services
-├── Docs/ # Requirements, roadmap, and architecture decisions
-├── .gitignore
-└── README.md
+├── frontend/
+├── backend/
+├── Docs/
+│   ├── README_ARCHITECTURE_DECISIONS.md
+│   ├── README_ROADMAP_REQUIREMENTS_TESTS.md
+│   └── README_AI_DEVELOPMENT_RULES.md
+├── README.md
+├── V2-readme.md
+└── .gitignore
+```
 
-## Development Status
+## Documentation
 
-**Status:** Initial setup
-
-The project is currently in its planning and environment-setup phase. Features will be developed and tested incrementally before deployment.
-
-## Project Documentation
-
-- [Roadmap, Requirements & Test Cases](Docs/README_ROADMAP_REQUIREMENTS_TESTS.md)
-- [AI-Assisted Development Rules](Docs/README_AI_DEVELOPMENT_RULES.md)
-- [Architecture Decisions](Docs/README_ARCHITECTURE_DECISIONS.md)
-
-## Engineering Goals
-
-- Maintain clear separation of frontend and backend responsibilities.
-- Validate inputs and handle errors consistently.
-- Persist authoritative workflow and execution state in PostgreSQL.
-- Use real-time events to communicate execution progress.
-- Introduce background processing, retries, automated testing, and deployment practices incrementally.
+- [Architecture decisions](Docs/README_ARCHITECTURE_DECISIONS.md)
+- [Roadmap, requirements, and tests](Docs/README_ROADMAP_REQUIREMENTS_TESTS.md)
+- [AI-assisted development rules](Docs/README_AI_DEVELOPMENT_RULES.md)
