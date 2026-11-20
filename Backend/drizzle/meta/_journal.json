@@ -36,6 +36,27 @@
       "when": 1793336808778,
       "tag": "0004_far_toad_men",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794929733410,
+      "tag": "0005_dear_speedball",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1795061783522,
+      "tag": "0006_romantic_luckman",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795148519155,
+      "tag": "0007_tense_george_stacy",
+      "breakpoints": true
     }
   ]
 }
